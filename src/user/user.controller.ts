@@ -1,13 +1,21 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UserService } from './user.service';
+import { IsExistDto } from './user.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('isExist')
-  isExist(@Query() query) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async isExist(@Query() query: IsExistDto) {
     const { id } = query;
-    return this.userService.findOne(id);
+    return await this.userService.findOne(id);
   }
 }
