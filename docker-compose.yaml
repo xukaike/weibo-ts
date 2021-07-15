@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  weibo-ts:
+    network_mode: bridge
+    container_name: weibo-ts
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: 256m
+    ports:
+      - 3000:3000
