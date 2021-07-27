@@ -27,12 +27,12 @@ export class User {
   password: string;
 
   @Column({
-    type: 'tinyint',
     comment: '昵称',
   })
   nick_name: string;
 
   @Column({
+    type: 'tinyint',
     unsigned: true,
     default: 2,
     comment: '性别 0:女,1:男,2:其他',
@@ -43,13 +43,13 @@ export class User {
     nullable: true,
     comment: '城市',
   })
-  city: number;
+  city: string;
 
   @Column({
     nullable: true,
     comment: '头像',
   })
-  avatar: number;
+  avatar: string;
 
   @CreateDateColumn({
     nullable: true,
