@@ -14,13 +14,13 @@ export class User {
   })
   id: number;
 
-  @Index()
+  @Index('unique_user_name', { unique: true })
   @Column({
     comment: '用户名',
   })
   user_name: string;
 
-  @Index()
+  @Index('index_password')
   @Column({
     comment: '密码',
   })

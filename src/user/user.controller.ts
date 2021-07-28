@@ -11,8 +11,13 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { changeInfoDto, IsExistDto, loginDto, RegisterDto } from './user.dto';
-import { HttpExceptionResult } from '../core/filter/http-exception-result';
+import { HttpExceptionResult } from '../common/filter/http-exception-result';
+import { IsExistDto } from './dto/is-exist.dto';
+import { RegisterDto } from './dto/register.dto';
+import { changeInfoDto } from './dto/change-info.dto';
+import { changePasswordDto } from './dto/change-password.dto';
+import { loginDto } from './dto/login.dto';
+import { Crypto } from '../common/utils/crypto';
 
 @Controller('user')
 export class UserController {
@@ -21,14 +26,21 @@ export class UserController {
   @Get('isExist')
   @UsePipes(new ValidationPipe({ transform: true }))
   async isExist(@Query() query: IsExistDto) {
-    const { id } = query;
-    return await this.userService.findOne(id);
+    const { user_name } = query;
+    return await this.userService.getUserInfo(user_name, null);
   }
 
   @Post('register')
   @UsePipes(new ValidationPipe({ transform: true }))
   async register(@Body() body: RegisterDto) {
     const { user_name, password, gender } = body;
+    const exist = await this.userService.getUserInfo(user_name, password);
+    if (exist) {
+      throw new HttpException(
+        HttpExceptionResult.USERNAME_EXIST,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return await this.userService.create(user_name, password, gender);
   }
 
@@ -48,9 +60,32 @@ export class UserController {
 
   @Post('changeInfo')
   async changeInfo(@Body() body: changeInfoDto, @Session() session) {
-    const user = session.user;
+    const { user_name, nick_name, city, avatar, gender } = body;
+    const { user } = session;
+    return this.userService.changeInfo(
+      user,
+      user_name,
+      nick_name,
+      city,
+      avatar,
+      gender,
+    );
   }
 
   @Post('changePassword')
-  async changePassword(@Body() body: changeInfoDto, @Session() session) {}
+  async changePassword(@Body() body: changePasswordDto, @Session() session) {
+    const { old_password, new_password } = body;
+    const user = session.user;
+    const valid = await this.userService.getUserInfo(
+      user.user_name,
+      old_password,
+    );
+    if (!valid) {
+      throw new HttpException(
+        HttpExceptionResult.PASSWORD_WRONG,
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return this.userService.changePassword(user, new_password);
+  }
 }

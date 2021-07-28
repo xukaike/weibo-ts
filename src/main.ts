@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from './core/pipe/validation.pipe';
+import { ValidationPipe } from './common/pipe/validation.pipe';
 import * as helmet from 'helmet';
-import { HttpExceptionFilter } from './core/filter/http-exception.filter';
-import { TransformInterceptor } from './core/interceptor/transform.interceptor';
+import { HttpExceptionFilter } from './common/filter/http-exception.filter';
+import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 import * as session from 'express-session';
 import * as redis from 'redis';
 import * as redisStore from 'connect-redis';

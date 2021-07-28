@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
-import { Utils } from '../core/utils/utils';
+import { User } from './entities/user.entity';
+import { Crypto } from '../common/utils/crypto';
 
 @Injectable()
 export class UserService {
@@ -11,10 +11,6 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async findOne(id: number): Promise<User> {
-    return this.userRepository.findOne({ id });
-  }
-
   async create(
     user_name: string,
     password: string,
@@ -22,7 +18,7 @@ export class UserService {
   ): Promise<User> {
     const user = this.userRepository.create({
       user_name,
-      password: Utils.md5(password),
+      password: Crypto.md5(password),
       gender,
       nick_name: user_name,
     });
@@ -35,28 +31,27 @@ export class UserService {
     nick_name: string,
     city: string,
     avatar: string,
+    gender: number,
   ): Promise<User> {
     user.nick_name = nick_name;
     user.user_name = user_name;
     user.city = city;
     user.avatar = avatar;
+    user.gender = gender;
     return this.userRepository.save(user);
   }
 
   async changePassword(user: User, password: string): Promise<User> {
-    user.password = Utils.md5(password);
+    user.password = Crypto.md5(password);
     return this.userRepository.save(user);
   }
 
-  async getUserInfo(
-    user_name: string,
-    password: string | undefined,
-  ): Promise<User> {
+  async getUserInfo(user_name: string, password: string | null): Promise<User> {
     let user;
     if (password) {
       user = await this.userRepository.findOne({
         user_name,
-        password: Utils.md5(password),
+        password: Crypto.md5(password),
       });
     } else {
       user = await this.userRepository.findOne({ user_name });
