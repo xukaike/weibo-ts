@@ -9,11 +9,24 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthMiddleware } from './common/middleware/auth.middleware';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import ormConfig from './config/configuration';
+import { TypeOrmConfigService } from './config/type-orm.service';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UserModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ConfigService],
+  imports: [
+    ConfigModule.forRoot({
+      load: [ormConfig],
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useClass: TypeOrmConfigService,
+    }),
+    UserModule,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

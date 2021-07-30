@@ -7,11 +7,16 @@ import { TransformInterceptor } from './common/interceptor/transform.interceptor
 import * as session from 'express-session';
 import * as redis from 'redis';
 import * as redisStore from 'connect-redis';
-const RedisStore = redisStore(session);
-const redisClient = redis.createClient();
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const configService = app.get(ConfigService);
+  const redisConfig = configService.get('redisConfig');
+  const RedisStore = redisStore(session);
+  const redisClient = redis.createClient(redisConfig);
+
   app.use(helmet());
   app.use(
     session({

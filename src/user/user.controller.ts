@@ -12,12 +12,13 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { HttpExceptionResult } from '../common/filter/http-exception-result';
-import { IsExistDto } from './dto/is-exist.dto';
-import { RegisterDto } from './dto/register.dto';
-import { changeInfoDto } from './dto/change-info.dto';
-import { changePasswordDto } from './dto/change-password.dto';
-import { loginDto } from './dto/login.dto';
-import { Crypto } from '../common/utils/crypto';
+import {
+  ChangeInfoDto,
+  ChangePasswordDto,
+  LoginDto,
+  IsExistDto,
+  RegisterDto,
+} from './dto';
 
 @Controller('user')
 export class UserController {
@@ -45,7 +46,7 @@ export class UserController {
   }
 
   @Post('login')
-  async login(@Body() body: loginDto, @Session() session) {
+  async login(@Body() body: LoginDto, @Session() session) {
     const { user_name, password } = body;
     const user = await this.userService.getUserInfo(user_name, password);
     if (!user) {
@@ -59,7 +60,7 @@ export class UserController {
   }
 
   @Post('changeInfo')
-  async changeInfo(@Body() body: changeInfoDto, @Session() session) {
+  async changeInfo(@Body() body: ChangeInfoDto, @Session() session) {
     const { user_name, nick_name, city, avatar, gender } = body;
     const { user } = session;
     return this.userService.changeInfo(
@@ -73,7 +74,7 @@ export class UserController {
   }
 
   @Post('changePassword')
-  async changePassword(@Body() body: changePasswordDto, @Session() session) {
+  async changePassword(@Body() body: ChangePasswordDto, @Session() session) {
     const { old_password, new_password } = body;
     const user = session.user;
     const valid = await this.userService.getUserInfo(

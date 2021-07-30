@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class changeInfoDto {
+export class ChangeInfoDto {
   @IsString()
   user_name: string;
 
