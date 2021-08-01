@@ -2,20 +2,34 @@ import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+interface ormConfig {
+  type: string;
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+  database: string;
+  entities: string[];
+  synchronize: boolean;
+}
+
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
-  createTypeOrmOptions(): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions {
-    // return this.configService.get<TypeOrmModuleOptions>('orm');
+  createTypeOrmOptions(): TypeOrmModuleOptions {
+    console.log(this.configService.get<string>('orm.host'));
+    console.log(this.configService.get<string>('orm.password'));
+    console.log(this.configService.get<string>('orm.username'));
     return {
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '123456',
-      database: 'weibo',
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      type: 'mysql',
+      host: this.configService.get<string>('orm.host'),
+      port: this.configService.get<number>('orm.port'),
+      username: this.configService.get<string>('orm.username'),
+      password: this.configService.get<string>('orm.password'),
+      database: this.configService.get<string>('orm.database'),
+      entities: this.configService.get<string[]>('orm.entities'),
+      synchronize: this.configService.get<boolean>('orm.synchronize'),
     };
   }
 }

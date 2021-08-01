@@ -10,7 +10,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthMiddleware } from './common/middleware/auth.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import ormConfig from './config/configuration';
+import configuration from './config/configuration';
 import { TypeOrmConfigService } from './config/type-orm.service';
 
 @Module({
@@ -18,7 +18,8 @@ import { TypeOrmConfigService } from './config/type-orm.service';
   providers: [AppService, ConfigService],
   imports: [
     ConfigModule.forRoot({
-      load: [ormConfig],
+      load: [configuration],
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
