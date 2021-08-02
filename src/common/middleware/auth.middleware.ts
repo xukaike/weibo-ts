@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { HttpExceptionResult } from '../filter/http-exception-result';
-import { User } from '../../user/entities/user.entity';
+import { User } from '../../user/entities/user.model';
 
 //Declaration merging
 declare module 'express-session' {

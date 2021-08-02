@@ -7,24 +7,22 @@ import {
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthMiddleware } from './common/middleware/auth.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration from './config/configuration';
-import { TypeOrmConfigService } from './config/type-orm.service';
+import { SequelizeConfigService } from './config/sequelize-config.service';
 
 @Module({
   controllers: [AppController],
   providers: [AppService, ConfigService],
   imports: [
     ConfigModule.forRoot({
-      load: [configuration],
       isGlobal: true,
     }),
-    TypeOrmModule.forRootAsync({
+    SequelizeModule.forRootAsync({
       imports: [ConfigModule],
+      useClass: SequelizeConfigService,
       inject: [ConfigService],
-      useClass: TypeOrmConfigService,
     }),
     UserModule,
   ],
