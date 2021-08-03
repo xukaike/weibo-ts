@@ -11,6 +11,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthMiddleware } from './common/middleware/auth.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeConfigService } from './config/sequelize-config.service';
+import { WinstonModule } from 'nest-winston';
+import { WinstonConfigService } from './config/winston-config.service';
 
 @Module({
   controllers: [AppController],
@@ -23,6 +25,9 @@ import { SequelizeConfigService } from './config/sequelize-config.service';
       imports: [ConfigModule],
       useClass: SequelizeConfigService,
       inject: [ConfigService],
+    }),
+    WinstonModule.forRootAsync({
+      useClass: WinstonConfigService,
     }),
     UserModule,
   ],
