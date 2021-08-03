@@ -3,6 +3,15 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/user.model';
 import { Crypto } from '../common/utils/crypto';
 
+interface UserInfo {
+  user_name?: string;
+  nick_name?: string;
+  password?: string;
+  gender?: number;
+  city?: string;
+  avatar?: string;
+}
+
 @Injectable()
 export class UserService {
   constructor(
@@ -14,34 +23,25 @@ export class UserService {
     user_name: string,
     password: string,
     gender: number,
-  ): Promise<void> {
-    // return await this.userModel.create({
-    //   user_name,
-    //   password: Crypto.md5(password),
-    //   gender,
-    //   nick_name: user_name,
-    // });
-  }
-
-  async changeInfo(
-    user: User,
-    user_name: string,
-    nick_name: string,
-    city: string,
-    avatar: string,
-    gender: number,
   ): Promise<User> {
-    user.nick_name = nick_name;
-    user.user_name = user_name;
-    user.city = city;
-    user.avatar = avatar;
-    user.gender = gender;
-    return await user.save();
+    return await this.userModel.create({
+      user_name,
+      password: Crypto.md5(password),
+      gender,
+      nick_name: user_name,
+    });
   }
 
-  async changePassword(user: User, password: string): Promise<User> {
-    user.password = Crypto.md5(password);
-    return await user.save();
+  async changeInfo(id: number, userInfo: UserInfo): Promise<User> {
+    const user = await this.userModel.findOne({ where: { id } });
+    return await user.update({
+      userInfo,
+    });
+  }
+
+  async changePassword(id: number, password: string): Promise<User> {
+    const user = await this.userModel.findOne({ where: { id } });
+    return await user.update({ password: Crypto.md5(password) });
   }
 
   async getUserInfo(user_name: string, password: string | null): Promise<User> {

@@ -4,8 +4,6 @@ import {
   Table,
   PrimaryKey,
   AutoIncrement,
-  CreatedAt,
-  UpdatedAt,
   DataType,
 } from 'sequelize-typescript';
 
@@ -24,8 +22,10 @@ import {
       fields: ['password'],
     },
   ],
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
 })
-export class User extends Model<User> {
+export class User extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
@@ -71,12 +71,4 @@ export class User extends Model<User> {
     comment: '头像',
   })
   avatar: string;
-
-  @CreatedAt
-  @Column({ field: 'created_at' })
-  createdAt: Date;
-
-  @UpdatedAt
-  @Column({ field: 'updated_at' })
-  updatedAt: Date;
 }

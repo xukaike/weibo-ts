@@ -63,14 +63,13 @@ export class UserController {
   async changeInfo(@Body() body: ChangeInfoDto, @Session() session) {
     const { user_name, nick_name, city, avatar, gender } = body;
     const { user } = session;
-    return this.userService.changeInfo(
-      user,
+    return this.userService.changeInfo(user.id, {
       user_name,
       nick_name,
       city,
       avatar,
       gender,
-    );
+    });
   }
 
   @Post('changePassword')
