@@ -12,7 +12,7 @@ export class WinstonConfigService implements WinstonModuleOptionsFactory {
         new transports.DailyRotateFile({
           level: 'info',
           filename: './logs/info/info-%DATE%.log',
-          datePattern: 'YYYY-MM-DD-HH',
+          datePattern: 'YYYY-MM-DD',
           zippedArchive: true,
           maxSize: '100m',
           maxFiles: '7d',
@@ -21,7 +21,7 @@ export class WinstonConfigService implements WinstonModuleOptionsFactory {
         new transports.DailyRotateFile({
           level: 'error',
           filename: './logs/error/error-%DATE%.log',
-          datePattern: 'YYYY-MM-DD-HH',
+          datePattern: 'YYYY-MM-DD',
           zippedArchive: true,
           maxSize: '100m',
           maxFiles: '7d',
@@ -30,7 +30,7 @@ export class WinstonConfigService implements WinstonModuleOptionsFactory {
         new transports.DailyRotateFile({
           level: 'debug',
           filename: './logs/debug/debug-%DATE%.log',
-          datePattern: 'YYYY-MM-DD-HH',
+          datePattern: 'YYYY-MM-DD',
           zippedArchive: true,
           maxSize: '100m',
           maxFiles: '7d',
@@ -39,7 +39,7 @@ export class WinstonConfigService implements WinstonModuleOptionsFactory {
         new transports.DailyRotateFile({
           level: 'warn',
           filename: './logs/warn/warn-%DATE%.log',
-          datePattern: 'YYYY-MM-DD-HH',
+          datePattern: 'YYYY-MM-DD',
           zippedArchive: true,
           maxSize: '100m',
           maxFiles: '7d',

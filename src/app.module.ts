@@ -13,10 +13,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeConfigService } from './config/sequelize-config.service';
 import { WinstonModule } from 'nest-winston';
 import { WinstonConfigService } from './config/winston-config.service';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggerInterceptor } from './common/interceptor/logger.interceptor';
 
 @Module({
   controllers: [AppController],
-  providers: [AppService, ConfigService],
+  providers: [
+    AppService,
+    ConfigService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggerInterceptor,
+    },
+  ],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
